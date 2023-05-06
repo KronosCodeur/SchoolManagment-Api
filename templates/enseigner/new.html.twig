@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Enseigner{% endblock %}
+
+{% block body %}
+    <h1>Create new Enseigner</h1>
+
+    {{ include('enseigner/_form.html.twig') }}
+
+    <a href="{{ path('app_enseigner_index') }}">back to list</a>
+{% endblock %}

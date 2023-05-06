@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EtudiantRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EtudiantRepository::class)]
+#[ApiResource()]
 class Etudiant
 {
     #[ORM\Id]
@@ -57,6 +59,10 @@ class Etudiant
     public function getEtudiantPrenom(): ?string
     {
         return $this->etudiantPrenom;
+    }
+    public function __toString()
+    {
+        return $this->etudiantNom;
     }
 
     public function setEtudiantPrenom(string $etudiantPrenom): self

@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MatiereRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MatiereRepository::class)]
+#[ApiResource()]
 class Matiere
 {
     #[ORM\Id]
@@ -24,11 +26,18 @@ class Matiere
     #[ORM\OneToMany(mappedBy: 'matiereId', targetEntity: Enseigner::class)]
     private Collection $enseigners;
 
+    #[ORM\ManyToMany(targetEntity: Professeur::class, mappedBy: 'enseigne')]
+    private Collection $professeurs;
+
     public function __construct()
     {
         $this->enseigners = new ArrayCollection();
+        $this->professeurs = new ArrayCollection();
     }
-
+    public function __toString()
+    {
+        return $this->matiereNom;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -83,6 +92,33 @@ class Matiere
             if ($enseigner->getMatiereId() === $this) {
                 $enseigner->setMatiereId(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Professeur>
+     */
+    public function getProfesseurs(): Collection
+    {
+        return $this->professeurs;
+    }
+
+    public function addProfesseur(Professeur $professeur): self
+    {
+        if (!$this->professeurs->contains($professeur)) {
+            $this->professeurs->add($professeur);
+            $professeur->addEnseigne($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProfesseur(Professeur $professeur): self
+    {
+        if ($this->professeurs->removeElement($professeur)) {
+            $professeur->removeEnseigne($this);
         }
 
         return $this;

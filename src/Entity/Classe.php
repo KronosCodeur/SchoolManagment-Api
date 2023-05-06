@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ClasseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClasseRepository::class)]
+#[ApiResource()]
 class Classe
 {
     #[ORM\Id]
@@ -51,6 +53,10 @@ class Classe
     }
 
     public function getClasseNom(): ?string
+    {
+        return $this->ClasseNom;
+    }
+    public function __toString()
     {
         return $this->ClasseNom;
     }

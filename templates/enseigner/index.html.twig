@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enseigner index{% endblock %}
+
+{% block body %}
+    <h1>Enseigner index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for enseigner in enseigners %}
+            <tr>
+                <td>{{ enseigner.id }}</td>
+                <td>
+                    <a href="{{ path('app_enseigner_show', {'id': enseigner.id}) }}">show</a>
+                    <a href="{{ path('app_enseigner_edit', {'id': enseigner.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_enseigner_new') }}">Create new</a>
+{% endblock %}

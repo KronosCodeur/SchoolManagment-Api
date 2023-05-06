@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProfesseurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProfesseurRepository::class)]
+#[ApiResource()]
 class Professeur
 {
     #[ORM\Id]
@@ -27,11 +29,19 @@ class Professeur
     #[ORM\OneToMany(mappedBy: 'professeurId', targetEntity: Enseigner::class)]
     private Collection $enseigners;
 
+    #[ORM\ManyToMany(targetEntity: Matiere::class, inversedBy: 'professeurs')]
+    private Collection $enseigne;
+
     public function __construct()
     {
         $this->enseigners = new ArrayCollection();
+        $this->enseigne = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->professeurNom;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -99,6 +109,30 @@ class Professeur
                 $enseigner->setProfesseurId(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Matiere>
+     */
+    public function getEnseigne(): Collection
+    {
+        return $this->enseigne;
+    }
+
+    public function addEnseigne(Matiere $enseigne): self
+    {
+        if (!$this->enseigne->contains($enseigne)) {
+            $this->enseigne->add($enseigne);
+        }
+
+        return $this;
+    }
+
+    public function removeEnseigne(Matiere $enseigne): self
+    {
+        $this->enseigne->removeElement($enseigne);
 
         return $this;
     }
